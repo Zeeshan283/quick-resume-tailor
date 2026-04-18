@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Quick Resume Tailor",
+  "short_name": "ResuTailor",
+  "version": "1.0",
+  "description": "Tailor your resume for any job description automatically.",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": [
+    "http://localhost:8000/*",
+    "https://api.groq.com/*"
+  ],
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Tailor Resume"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.linkedin.com/jobs/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
