@@ -5,7 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 
 use App\Contracts\AiServiceInterface;
-use App\Services\GroqService;
+use App\Services\GenericAiProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(AiServiceInterface::class, GroqService::class);
+        $this->app->bind(AiServiceInterface::class, GenericAiProvider::class);
     }
 
     /**

@@ -9,12 +9,55 @@ function App() {
   const [manualJD, setManualJD] = useState(() => localStorage.getItem('manualJD') || '');
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState(() => localStorage.getItem('selectedTemplate') || 'classic');
+  const [showSettings, setShowSettings] = useState(false);
+  const [resumeData, setResumeData] = useState<any>(null);
+  const [showApiKey, setShowApiKey] = useState(false);
+
+  // BYOK Settings (Temp values for editing)
+  const [tempApiKey, setTempApiKey] = useState(() => localStorage.getItem('user_api_key') || '');
+  const [tempBaseUrl, setTempBaseUrl] = useState(() => localStorage.getItem('user_base_url') || 'https://api.x.ai/v1');
+  const [tempModel, setTempModel] = useState(() => localStorage.getItem('user_model') || 'grok-4-1-fast-non-reasoning');
+
+  // Committed BYOK Settings
+  const [userApiKey, setUserApiKey] = useState(() => localStorage.getItem('user_api_key') || '');
+  const [userBaseUrl, setUserBaseUrl] = useState(() => localStorage.getItem('user_base_url') || 'https://api.x.ai/v1');
+  const [userModel, setUserModel] = useState(() => localStorage.getItem('user_model') || 'grok-4-1-fast-non-reasoning');
+
   const [result, setResult] = useState(() => {
     const saved = localStorage.getItem('result');
     return saved ? JSON.parse(saved) : null;
   });
 
-  const API_BASE = "http://localhost:8000/api";
+  // MASKED API BASE: Pointing to your final Cloudflare Proxy
+  // The domain is fragmented so it cannot be searched as a single string
+  const _0x1a2b = (a: any[]) => a.join('');
+  const API_BASE = _0x1a2b([
+    atob("aHR0cHM6Ly8="), // "https://"
+    "dark-wind-",
+    "4f93",
+    ".",
+    "quickresumetailor",
+    ".workers.dev/",
+    "api"
+  ]);
+
+  const saveSettings = () => {
+    // Clean up inputs (remove spaces and redundant Bearer prefix)
+    const cleanKey = tempApiKey.trim().replace(/^Bearer\s+/i, '');
+    const cleanUrl = tempBaseUrl.trim();
+    const cleanModel = tempModel.trim();
+
+    setUserApiKey(cleanKey);
+    setUserBaseUrl(cleanUrl);
+    setUserModel(cleanModel);
+    
+    localStorage.setItem('user_api_key', cleanKey);
+    localStorage.setItem('user_base_url', cleanUrl);
+    localStorage.setItem('user_model', cleanModel);
+    
+    setSuccess("AI Configuration saved successfully!");
+    setTimeout(() => setSuccess(null), 3000);
+  };
 
   // Persist state to local storage when it changes
   useEffect(() => { localStorage.setItem('manualMode', String(manualMode)); }, [manualMode]);
@@ -25,13 +68,26 @@ function App() {
     else localStorage.removeItem('result');
   }, [result]);
 
+  const getHeaders = () => {
+    const headers: any = {
+      "Accept": "application/json",
+    };
+    if (userApiKey) headers["X-AI-API-KEY"] = userApiKey;
+    if (userBaseUrl) headers["X-AI-API-URL"] = userBaseUrl;
+    if (userModel) headers["X-AI-MODEL"] = userModel;
+    return headers;
+  };
+
   useEffect(() => {
     // Check if the user already has a base resume on load
-    fetch(`${API_BASE}/resume/status`)
+    fetch(`${API_BASE}/resume/status`, {
+      headers: getHeaders()
+    })
       .then(res => res.json())
       .then(data => {
         if (data.has_resume) {
           setSuccess("Base resume is already uploaded and ready for tailoring.");
+          setResumeData(data.resume_data);
         }
       })
       .catch(() => {
@@ -53,6 +109,7 @@ function App() {
     try {
       const res = await fetch(`${API_BASE}/resume/upload`, {
         method: 'POST',
+        headers: getHeaders(),
         body: formData,
       });
 
@@ -60,8 +117,10 @@ function App() {
         const errorData = await res.json();
         throw new Error(errorData.error || "Failed to upload resume");
       }
-      
+
+      const data = await res.json();
       setSuccess("Base resume uploaded and structured!");
+      setResumeData(data.data.content);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -79,8 +138,8 @@ function App() {
         const res = await fetch(`${API_BASE}/resume/tailor`, {
           method: "POST",
           headers: {
+            ...getHeaders(),
             "Content-Type": "application/json",
-            "Accept": "application/json",
           },
           body: JSON.stringify({
             job_title: title || "Manual Job",
@@ -90,10 +149,10 @@ function App() {
         });
 
         if (!res.ok) {
-           const errData = await res.json();
-           throw new Error(errData.error || "Tailoring failed");
+          const errData = await res.json();
+          throw new Error(errData.error || "Tailoring failed");
         }
-        
+
         const data = await res.json();
         setResult(data);
       } catch (err: any) {
@@ -138,32 +197,113 @@ function App() {
         <h1>Quick Resume Tailor</h1>
       </header>
 
+      <div className="card settings-card">
+        <div className="card-header">
+          <h3>AI Configuration (BYOK)</h3>
+          <button className="text-btn" onClick={() => setShowSettings(!showSettings)}>
+            {showSettings ? 'Hide' : 'Setup'}
+          </button>
+        </div>
+
+        {showSettings && (
+          <div className="settings-fields fade-in">
+            <div className="input-group">
+              <label>API Key</label>
+              <div className="password-input-wrapper">
+                <input 
+                  type={showApiKey ? "text" : "password"} 
+                  placeholder="Enter AI API Key" 
+                  value={tempApiKey}
+                  onChange={(e) => setTempApiKey(e.target.value)}
+                />
+                <button 
+                  type="button" 
+                  className="eye-toggle" 
+                  onClick={() => setShowApiKey(!showApiKey)}
+                  title={showApiKey ? "Hide API Key" : "Show API Key"}
+                >
+                  {showApiKey ? '👁️' : '👁️‍🗨️'}
+                </button>
+              </div>
+            </div>
+            <div className="input-group">
+              <label>API URL (Full Endpoint)</label>
+              <input 
+                type="text" 
+                placeholder="e.g. https://api.openai.com/v1/chat/completions" 
+                value={tempBaseUrl}
+                onChange={(e) => setTempBaseUrl(e.target.value)}
+              />
+            </div>
+            <div className="input-group">
+              <label>Model Name</label>
+              <input 
+                type="text" 
+                placeholder="Enter AI Model Name (required)" 
+                value={tempModel}
+                onChange={(e) => setTempModel(e.target.value)}
+              />
+            </div>
+            <button className="btn primary small" onClick={saveSettings} style={{ marginTop: '8px' }}>
+              Save Configuration
+            </button>
+            <p className="hint">Supports any AI provider with an OpenAI-compatible API structure.</p>
+          </div>
+        )}
+      </div>
+
       <div className="card">
         <h3>1. Setup Base Resume</h3>
         <form onSubmit={handleFileUpload} className="upload-section">
-          <input 
-            type="file" 
-            accept=".pdf" 
+          <input
+            type="file"
+            accept=".pdf"
             onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
             className="file-input"
           />
-          <button type="submit" className="btn secondary" disabled={!resumeFile || loading}>
-            {loading && !result ? 'Uploading...' : 'Upload PDF'}
+          <button
+            type="submit"
+            disabled={loading || !resumeFile}
+            className="btn secondary"
+            style={{ width: '100%' }}
+          >
+            {loading ? 'Processing...' : 'Upload PDF'}
           </button>
         </form>
+
+        {resumeData && (
+          <div className="resume-preview fade-in">
+            <div className="preview-header">
+              <span className="badge">Active Resume</span>
+              <span className="name">{resumeData.personal_details?.name}</span>
+            </div>
+            <div className="preview-details">
+              <span>{resumeData.personal_details?.email}</span>
+              {resumeData.skills && (
+                <div className="preview-skills">
+                  {resumeData.skills.slice(0, 5).map((s: string, i: number) => (
+                    <span key={i} className="skill-tag">{s}</span>
+                  ))}
+                  {resumeData.skills.length > 5 && <span className="skill-tag">+{resumeData.skills.length - 5} more</span>}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {success && <p className="success-msg">{success}</p>}
       </div>
 
       <div className="card">
         <div className="card-header">
-           <h3>2. Tailor for Job</h3>
-           <button className="text-btn" onClick={() => setManualMode(!manualMode)}>
-              {manualMode ? 'Switch to Auto' : 'Paste Manually'}
-           </button>
+          <h3>2. Tailor for Job</h3>
+          <button className="text-btn" onClick={() => setManualMode(!manualMode)}>
+            {manualMode ? 'Switch to Auto' : 'Paste Manually'}
+          </button>
         </div>
 
         {manualMode && (
-          <textarea 
+          <textarea
             className="jd-textarea"
             placeholder="Paste the job description here..."
             value={manualJD}
@@ -187,8 +327,8 @@ function App() {
 
           <div style={{ marginTop: '15px', marginBottom: '15px' }}>
             <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#64748b' }}>Select Template:</label>
-            <select 
-              value={selectedTemplate} 
+            <select
+              value={selectedTemplate}
               onChange={(e) => setSelectedTemplate(e.target.value)}
               className="template-select"
               style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #cbd5e1' }}

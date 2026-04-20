@@ -125,7 +125,10 @@ class ResumeController extends Controller
         }
 
         $baseResume = $user->resumes()->latest()->first();
-        return response()->json(['has_resume' => !is_null($baseResume)]);
+        return response()->json([
+            'has_resume' => !is_null($baseResume),
+            'resume_data' => $baseResume ? $baseResume->content : null
+        ]);
     }
 
     /**
