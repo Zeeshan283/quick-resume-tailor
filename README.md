@@ -18,7 +18,7 @@
 
 <br/>
 
-[**Download Extension →**](./Quick-Resume-Tailor.zip) &nbsp;&nbsp;|&nbsp;&nbsp; [**Live Demo →**](https://dark-wind-4f93.quickresumetailor.workers.dev/)
+[**Download Extension →**](./Quick-Resume-Tailor.zip) &nbsp;&nbsp;|&nbsp;&nbsp; [**Contact Us →**](https://dark-wind-4f93.quickresumetailor.workers.dev/)
 
 <br/>
 
