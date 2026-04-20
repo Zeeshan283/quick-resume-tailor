@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ResumeController;
+use App\Http\Controllers\ContactController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -13,3 +14,5 @@ Route::get('/resume/status', [ResumeController::class, 'checkStatus']);
 Route::post('/resume/upload', [ResumeController::class, 'uploadResumePdf']);
 Route::post('/resume/tailor', [ResumeController::class, 'tailor']);
 Route::get('/resume/download/{id}', [ResumeController::class, 'downloadPdf']);
+
+Route::post('/contact', [ContactController::class, 'send']);
