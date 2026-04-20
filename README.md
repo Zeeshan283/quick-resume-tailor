@@ -62,4 +62,4 @@ MIT License - Feel free to use and contribute!
 
 ---
 
-*Created with ❤️ by Zeeshan283*
+*Created with ❤️ by Zeeshan*
