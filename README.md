@@ -1,65 +1,131 @@
-# 🚀 Quick Resume Tailor
+<div align="center">
 
-**Quick Resume Tailor** is a powerful, privacy-first, and 100% cost-free tool designed to help job seekers tailor their resumes for specific job descriptions in seconds. 
+<br/>
 
-By using a **"Bring Your Own Key" (BYOK)** architecture, this tool removes the cost barrier for developers and gives users absolute control over which AI provider they use (Grok, OpenAI, Groq, etc.).
+<img src="https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge&logoColor=white" alt="Version"/>
+<img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="License"/>
+<img src="https://img.shields.io/badge/Chrome-Extension-yellow?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Chrome Extension"/>
+<img src="https://img.shields.io/badge/Laravel-11-red?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel"/>
+<img src="https://img.shields.io/badge/BYOK-Enabled-purple?style=for-the-badge" alt="BYOK"/>
+
+<br/><br/>
+
+# ⚡ Quick Resume Tailor
+
+### Stop applying blindly. Start getting interviews.
+
+**Quick Resume Tailor** is an AI-powered Chrome Extension that instantly tailors your resume against any job description. Built with a privacy-first, **Bring Your Own Key (BYOK)** architecture — you own the AI, you control the cost.
+
+<br/>
+
+[**Download Extension →**](./Quick-Resume-Tailor.zip) &nbsp;&nbsp;|&nbsp;&nbsp; [**Live Demo →**](https://dark-wind-4f93.quickresumetailor.workers.dev/)
+
+<br/>
+
+</div>
 
 ---
+
+## 🎯 What It Does
+
+Most resumes never get seen by a human recruiter. Automated systems (ATS) filter them out before a single human eye reads them. **Quick Resume Tailor** fixes that — automatically.
+
+It reads the job description, analyzes your resume, and produces a rewritten version that is laser-targeted to that specific role.
+
+<br/>
+
+## ✨ Key Features
+
+| Feature | Description |
+|---|---|
+| 🔑 **BYOK Architecture** | Use your own AI key (Grok, OpenAI, Groq, etc.). Zero subscription costs. |
+| 🔒 **100% Stateless** | We never store your personal data. Processed in-memory, never on disk. |
+| 🛡️ **Proxy Masked Backend** | Your traffic routes through Cloudflare — backend identity fully protected. |
+| 📄 **Deep PDF Parsing** | High-accuracy extraction of your resume's full content structure. |
+| 🔗 **LinkedIn Integration** | Detects job descriptions on LinkedIn pages automatically. |
+| 💡 **Any AI Model** | Compatible with any OpenAI-style API endpoint. |
+
+<br/>
+
+## 🚀 Quick Start (Non-Coders)
+
+**No technical experience required.**
+
+1. **[Download the Zip](./Quick-Resume-Tailor.zip)** — Click the link and save the file.
+2. **Extract** — Right-click the file and select "Extract All".
+3. **Open Chrome Extensions** — Go to `chrome://extensions/` in your browser.
+4. **Enable Developer Mode** — Toggle the switch in the top-right corner.
+5. **Load the Extension** — Click "Load Unpacked" and select the extracted folder.
+6. **Configure** — Open the extension, go to Settings, and enter your AI API Key.
+
+> [!TIP]
+> You can even use any free api and there model.
+
+<br/>
+
+## 🛠️ Developer Setup
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Zeeshan283/quick-resume-tailor.git
+cd quick-resume-tailor
+
+# 2. Backend setup
+cd backend
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan serve
+
+# 3. Extension setup
+cd ../extension
+npm install
+npm run build
+# Load the `extension/dist` folder into chrome://extensions
+```
+
+<br/>
 
 ## 🏗️ Architecture
 
-This project uses a high-security "Proxy Mask" architecture to ensure the backend server remains hidden and protected from unauthorized use.
-
-```mermaid
-graph LR
-    User([Chrome Extension]) --> CF[Cloudflare Proxy]
-    CF --> Backend[Laravel Backend]
-    Backend --> AI[AI Provider /BYOK/]
+```
+User (Chrome)
+    │
+    ▼
+Cloudflare Worker Proxy  ← Masks the backend domain
+    │
+    ▼
+Laravel API (Hostinger)  ← Stateless, header-driven
+    │
+    ▼
+Your AI Provider (BYOK)  ← Your key, your cost
 ```
 
-### Key Features:
-- **Zero-Cost Deployment**: Stateless backend that relies on user-provided keys.
-- **Privacy-First**: Your personal resume data isn't stored permanently; it's parsed and processed on-the-fly.
-- **Universal AI Support**: Compatible with any OpenAI-style API (Grok, OpenRouter, DeepSeek, etc.).
-- **Live Preview**: Real-time resume data visualization in the extension.
-- **Stealth Protection**: Backend API masked behind Cloudflare to prevent direct discovery.
+<br/>
 
----
+## 🤝 Need Professional Help?
 
-## 📂 Project Structure
+If you want a **human expert** to review your resume, write your career story, or help you break into a new field — we offer premium career services.
 
-- `backend/`: Laravel 11 API handling resume parsing and PDF generation.
-- `extension/`: React + Vite Chrome Extension for job extraction and UI.
+- **Resume Rewrite** — We don't just edit. We rebuild your narrative from scratch.
+- **ATS Optimization** — Guaranteed to pass keyword filters for your target roles.
+- **1-on-1 Career Consultation** — Personalized strategy for your next big move.
 
----
 
-## 🛠️ Quick Start
-
-### 1. Backend Setup
-1. Enter the `backend/` directory.
-2. Run `composer install`.
-3. Set up your `.env` (See `backend/deployment_guide.md` for details).
-4. Run `php artisan migrate`.
-5. Start the server: `php artisan serve`.
-
-### 2. Extension Setup
-1. Enter the `extension/` directory.
-2. Run `npm install` and `npm run build`.
-3. Open Chrome and go to `chrome://extensions`.
-4. Enable **Developer Mode**.
-5. Click **Load Unpacked** and select the `extension/dist` folder.
-
----
-
-## 🔒 Security & Masking
-
-This project implements **Aggressive Domain Masking**. All backend URLs and secrets are fragmented and obfuscated within the minified build to prevent simple reverse-engineering. For production, it is recommended to use the **Cloudflare Worker Proxy** included in the documentation.
-
----
+<br/>
 
 ## 📄 License
-MIT License - Feel free to use and contribute!
+
+This project is licensed under the **MIT License** — you are free to use, modify, and distribute it.
+
+<br/>
 
 ---
 
-*Created with ❤️ by Zeeshan*
+<div align="center">
+
+**Built with precision by [Zeeshan](https://github.com/Zeeshan283)**
+
+*If this project helped you, consider starring ⭐ the repo.*
+
+</div>
