@@ -1,73 +1,36 @@
-# React + TypeScript + Vite
+# Quick Resume Tailor (Chrome Extension)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An AI-powered extension that helps you tailor your resume for any job description directly within your browser.
 
-Currently, two official plugins are available:
+## 🚀 Quick Install
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+To use this extension from your locally downloaded files:
 
-## React Compiler
+1.  **Download & Extract**: Download this folder to your computer.
+2.  **Open Extensions Page**: In Chrome, go to `chrome://extensions/`.
+3.  **Enable Developer Mode**: Toggle the **"Developer mode"** switch in the top right corner.
+4.  **Load Extension**: Click the **"Load unpacked"** button and select the `dist/` folder inside this extension directory.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Setup (BYOK)
 
-## Expanding the ESLint configuration
+This extension uses a **BYOK (Bring Your Own Key)** architecture. This means you have full control over your AI provider and costs.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1.  Open the extension popup.
+2.  Click on the **Settings (Gear Icon)**.
+3.  Enter your **AI API Key**, **Base URL**, and **Preferred Model**.
+    - Compatible with OpenAI, Groq, xAI (Grok), and other OpenAI-style APIs.
+4.  Click **Save Configuration**.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## ✨ Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+-   **Privacy First**: Your resume data is never stored on our servers. Processing happens in-memory and is delivered directly to you.
+-   **Deep Analysis**: High-accuracy PDF parsing extracts your real experience.
+-   **Smart Tailoring**: Uses advanced AI to align your skills with specific job requirements.
+-   **LinkedIn Integration**: Automatically detects job descriptions on LinkedIn.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📄 License
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+*Empower your job search with AI.*
