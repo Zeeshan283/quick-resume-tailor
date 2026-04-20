@@ -2,11 +2,17 @@
 
 An AI-powered extension that helps you tailor your resume for any job description directly within your browser.
 
-## 🚀 Quick Install
+## 🚀 How to Install
 
-To use this extension from your locally downloaded files:
+### Option A: The Easy Way (Recommended for Non-Coders)
+1.  **Download the Zip**: Download `Quick-Resume-Tailor.zip` from this repository.
+2.  **Extract**: Right-click the zip file and select "Extract All" (or "Unzip").
+3.  **Open Extensions Page**: In Chrome, go to `chrome://extensions/`.
+4.  **Enable Developer Mode**: Toggle the **"Developer mode"** switch in the top right corner.
+5.  **Load Extension**: Click the **"Load unpacked"** button and select the extracted folder.
 
-1.  **Download & Extract**: Download this folder to your computer.
+### Option B: For Developers (Build from Source)
+1.  **Download & Extract**: Download this entire folder to your computer.
 2.  **Open Extensions Page**: In Chrome, go to `chrome://extensions/`.
 3.  **Enable Developer Mode**: Toggle the **"Developer mode"** switch in the top right corner.
 4.  **Load Extension**: Click the **"Load unpacked"** button and select the `dist/` folder inside this extension directory.
