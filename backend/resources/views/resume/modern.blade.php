@@ -89,7 +89,7 @@
 <body>
 
     <div class="header">
-        <h1>{{ $resume['personal_details']['name'] ?? 'Professional Resume' }}</h1>
+        <h1>{{ $custom_name ?? $resume['personal_details']['name'] ?? 'Professional Resume' }}</h1>
         <div class="contact-info">
             @if(isset($resume['personal_details']['phone']))
                 {{ $resume['personal_details']['phone'] }} &nbsp;|&nbsp; 

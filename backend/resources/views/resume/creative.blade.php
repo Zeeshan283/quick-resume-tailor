@@ -101,7 +101,7 @@
 <body>
 
     <div class="header-bg">
-        <h1>{{ $resume['personal_details']['name'] ?? 'Professional Resume' }}</h1>
+        <h1>{{ $custom_name ?? $resume['personal_details']['name'] ?? 'Professional Resume' }}</h1>
         <table class="contact-table">
             <tr>
                 <td style="width: 50%;">

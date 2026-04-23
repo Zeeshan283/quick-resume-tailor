@@ -9,6 +9,7 @@ function App() {
   const [manualJD, setManualJD] = useState(() => localStorage.getItem('manualJD') || '');
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState(() => localStorage.getItem('selectedTemplate') || 'classic');
+  const [downloadName, setDownloadName] = useState(() => localStorage.getItem('downloadName') || '');
   const [showSettings, setShowSettings] = useState(false);
   const [resumeData, setResumeData] = useState<any>(null);
   const [showApiKey, setShowApiKey] = useState(false);
@@ -63,6 +64,7 @@ function App() {
   useEffect(() => { localStorage.setItem('manualMode', String(manualMode)); }, [manualMode]);
   useEffect(() => { localStorage.setItem('manualJD', manualJD); }, [manualJD]);
   useEffect(() => { localStorage.setItem('selectedTemplate', selectedTemplate); }, [selectedTemplate]);
+  useEffect(() => { localStorage.setItem('downloadName', downloadName); }, [downloadName]);
   useEffect(() => {
     if (result) localStorage.setItem('result', JSON.stringify(result));
     else localStorage.removeItem('result');
@@ -325,7 +327,7 @@ function App() {
             <span className="value">{result.ats_score}%</span>
           </div>
 
-          <div style={{ marginTop: '15px', marginBottom: '15px' }}>
+          <div style={{ marginTop: '15px', marginBottom: '8px' }}>
             <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#64748b' }}>Select Template:</label>
             <select
               value={selectedTemplate}
@@ -340,7 +342,23 @@ function App() {
             </select>
           </div>
 
-          <a href={`${API_BASE}/resume/download/${result.generated_id}?template=${selectedTemplate}`} target="_blank" rel="noreferrer" className="btn download">
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#64748b' }}>Your Name (shown in PDF header & file name):</label>
+            <input
+              type="text"
+              placeholder="e.g. John Smith"
+              value={downloadName}
+              onChange={(e) => setDownloadName(e.target.value)}
+              style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', fontSize: '13px' }}
+            />
+          </div>
+
+          <a
+            href={`${API_BASE}/resume/download/${result.generated_id}?template=${selectedTemplate}${downloadName ? `&filename=${encodeURIComponent(downloadName)}&custom_name=${encodeURIComponent(downloadName)}` : ''}`}
+            target="_blank"
+            rel="noreferrer"
+            className="btn download"
+          >
             📥 Download PDF
           </a>
         </div>

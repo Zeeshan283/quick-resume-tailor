@@ -137,18 +137,33 @@ class ResumeController extends Controller
     public function downloadPdf(Request $request, string $id)
     {
         $generatedResume = GeneratedResume::findOrFail($id);
-        
+
         $template = $request->query('template', 'classic');
         $allowedTemplates = ['classic', 'modern', 'compact', 'creative'];
-        
+
         if (!in_array($template, $allowedTemplates)) {
             $template = 'classic';
         }
 
+        // Custom name shown in the PDF header (overrides resume data name)
+        $customName = $request->query('custom_name')
+            ? trim($request->query('custom_name'))
+            : null;
+
+        // Custom filename for the downloaded file (sanitised, no path traversal)
+        $rawFilename = $request->query('filename')
+            ? trim($request->query('filename'))
+            : null;
+
+        $downloadFilename = $rawFilename
+            ? preg_replace('/[^a-zA-Z0-9_\-]/', '_', $rawFilename) . '.pdf'
+            : "Tailored_Resume_{$template}.pdf";
+
         $pdf = Pdf::loadView("resume.{$template}", [
-            'resume' => $generatedResume->output
+            'resume'      => $generatedResume->output,
+            'custom_name' => $customName,
         ]);
 
-        return $pdf->download("Tailored_Resume_{$template}.pdf");
+        return $pdf->download($downloadFilename);
     }
 }
